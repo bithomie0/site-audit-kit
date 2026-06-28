@@ -1,0 +1,11 @@
+{
+  "name": "site-audit-kit",
+  "version": "1.0.0",
+  "description": "Screenshot prospect websites, write cold-outreach audits, and render before/after reveal videos (landscape + vertical) plus drag-to-compare showcases.",
+  "author": {
+    "name": "bithomie",
+    "url": "https://github.com/bithomie0"
+  },
+  "repository": "https://github.com/bithomie0/site-audit-kit",
+  "keywords": ["audit", "screenshot", "web-design", "freelance", "before-after"]
+}

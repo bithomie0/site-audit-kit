@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<!--
+  ════════════════════════════════════════════════════════════════════
+  BEFORE / AFTER SHOWCASE  —  how to use (delete this block if you like)
+  ════════════════════════════════════════════════════════════════════
+
+  1. SWAP IN YOUR SCREENSHOTS
+     Each comparison has two layers:
+         <div class="layer before"> ...art... </div>
+         <div class="layer after">  ...art... </div>
+     Replace the demo <svg>…</svg> inside each with your own image, e.g.
+         <div class="layer before"><img src="old-site.png" alt="Before"></div>
+         <div class="layer after"><img src="new-site.png" alt="After"></div>
+     Use the SAME dimensions for both shots so they line up. Full-page
+     screenshots work great — set .compare's aspect-ratio to match below.
+
+  2. ADD ANOTHER PROJECT
+     Copy one whole <article class="project">…</article> block and edit it.
+
+  3. MAKE IT YOURS
+     Change the studio name in the header + footer, and the accent colour
+     (--accent) in the :root block.
+
+  Capturing the screenshots: Claude Code with the PixelRAG plugin, the
+  GoFullPage browser extension, or any full-page screenshot tool will do.
+  ════════════════════════════════════════════════════════════════════
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before / After — Web Redesign Showcase</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:        #0c1120;
+    --bg-soft:   #121a2e;
+    --card:      #141d33;
+    --line:      #25324f;
+    --ink:       #eef2fb;
+    --muted:     #93a0bd;
+    --muted-dim: #6b78973;
+    --accent:    #ff8a4c;   /* the one bold colour — change to rebrand */
+    --accent-ink:#1a0e06;
+    --display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+    --body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(255,138,76,.10), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:clamp(28px,5vw,72px) clamp(18px,4vw,40px); }
+
+  /* ── Header ───────────────────────────────────────────────── */
+  header{ display:flex; align-items:baseline; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:clamp(40px,7vw,80px); }
+  .studio{ display:flex; align-items:center; gap:11px; font-family:var(--display); font-weight:600; letter-spacing:-.01em; font-size:1.05rem; }
+  .studio .dot{ width:11px; height:11px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(255,138,76,.18); }
+  .eyebrow{ font-family:var(--display); font-size:.72rem; font-weight:500; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); }
+
+  .lede h1{
+    font-family:var(--display); font-weight:700;
+    font-size:clamp(2.3rem,6vw,4rem); line-height:.98; letter-spacing:-.03em;
+    margin:.5rem 0 0;
+  }
+  .lede h1 em{ font-style:normal; color:var(--accent); }
+  .lede p{ max-width:46ch; color:var(--muted); font-size:1.05rem; margin:1rem 0 0; }
+
+  /* ── Project card ─────────────────────────────────────────── */
+  .project{
+    margin-top:clamp(40px,6vw,72px);
+    background:linear-gradient(180deg, var(--card), var(--bg-soft));
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:clamp(18px,3vw,28px);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,.6);
+  }
+  .project-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px; }
+  .project-head h2{ font-family:var(--display); font-weight:600; font-size:1.45rem; letter-spacing:-.02em; margin:0; }
+  .project-head .url{ color:var(--muted); font-size:.85rem; font-family:var(--display); }
+  .tags{ display:flex; gap:7px; flex-wrap:wrap; }
+  .tags span{ font-size:.72rem; font-weight:500; color:var(--ink); background:rgba(255,138,76,.12); border:1px solid rgba(255,138,76,.3); padding:4px 10px; border-radius:999px; }
+
+  /* ── The comparison slider (the signature element) ────────── */
+  .compare{
+    position:relative;
+    container-type:inline-size;
+    aspect-ratio:16/10;                 /* match your screenshot ratio */
+    overflow:hidden;
+    border-radius:12px;
+    border:1px solid var(--line);
+    cursor:ew-resize;
+    user-select:none;
+    touch-action:pan-y;
+    background:#0a0f1c;
+  }
+  .layer{ position:absolute; inset:0; }
+  .layer img, .layer svg{ width:100%; height:100%; object-fit:cover; display:block; }
+  .layer.after{ width:var(--pos,50%); overflow:hidden; }
+  .layer.after img, .layer.after svg{ width:100cqw; }   /* stays full-width while clipped */
+
+  .tag-label{
+    position:absolute; top:12px; z-index:4;
+    font-family:var(--display); font-weight:600; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase;
+    padding:5px 11px; border-radius:7px; backdrop-filter:blur(6px);
+  }
+  .tag-before{ left:12px; background:rgba(12,17,32,.72); color:var(--muted); border:1px solid var(--line); }
+  .tag-after{ right:12px; background:var(--accent); color:var(--accent-ink); }
+
+  .divider{ position:absolute; top:0; bottom:0; left:var(--pos,50%); width:2px; background:var(--accent); z-index:5; transform:translateX(-1px); }
+  .handle{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:46px; height:46px; border-radius:50%;
+    background:var(--accent); color:var(--accent-ink);
+    border:3px solid var(--bg); cursor:ew-resize;
+    display:grid; place-items:center;
+    box-shadow:0 6px 20px rgba(0,0,0,.45);
+    font-size:0; padding:0;
+  }
+  .handle::before{ content:"\25C0\25B6"; letter-spacing:1px; font-size:13px; font-family:var(--display); }
+  .handle:focus-visible{ outline:3px solid #fff; outline-offset:3px; }
+
+  @media (prefers-reduced-motion:no-preference){
+    .nudge .divider{ animation:nudge 1.6s ease-in-out 1; }
+    @keyframes nudge{ 0%,100%{left:50%} 30%{left:42%} 65%{left:58%} }
+  }
+
+  .result{ margin:16px 2px 2px; color:var(--muted); font-size:.95rem; }
+  .result strong{ color:var(--ink); font-weight:600; }
+
+  footer{ margin-top:clamp(56px,8vw,96px); padding-top:28px; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; color:var(--muted); font-size:.85rem; }
+  footer a{ color:var(--accent); text-decoration:none; }
+
+  @media (max-width:560px){
+    .project-head{ flex-direction:column; gap:8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="studio"><span class="dot"></span>YOUR STUDIO</div>
+    <div class="eyebrow">Redesign Proof Sheet</div>
+  </header>
+
+  <div class="lede">
+    <h1>Same business.<br><em>Drag to see the difference.</em></h1>
+    <p>Pull the handle across each screenshot — left is the site we inherited, right is what we shipped. Every pixel rebuilt for speed, clarity, and conversions.</p>
+  </div>
+
+  <!-- ══════════════ PROJECT 1 ══════════════ -->
+  <article class="project">
+    <div class="project-head">
+      <div>
+        <h2>Northgate Plumbing</h2>
+        <div class="url">northgateplumbing.example</div>
+      </div>
+      <div class="tags"><span>Mobile-first</span><span>+ Booking CTA</span><span>Faster load</span></div>
+    </div>
+
+    <div class="compare nudge" style="--pos:50%">
+      <!-- BEFORE: replace this whole .layer's contents with <img src="your-before.png" alt="Before"> -->
+      <div class="layer before">
+        <svg viewBox="0 0 1200 750" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Outdated website before redesign">
+          <rect width="1200" height="750" fill="#e7e0cd"/>
+          <rect width="1200" height="750" fill="url(#stripes)" opacity=".25"/>
+          <defs><pattern id="stripes" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M0 14L14 0" stroke="#cbbf9e" stroke-width="2"/></pattern></defs>
+          <rect width="1200" height="92" fill="#7a1f1f"/>
+          <text x="34" y="58" font-family="Times New Roman, serif" font-size="40" fill="#ffd9a8" font-weight="bold">~ Joe's Plumbing &amp; Heating ~</text>
+          <text x="900" y="40" font-family="Times New Roman, serif" font-size="18" fill="#f3c9a0">Est. 1998</text>
+          <rect x="0" y="92" width="250" height="658" fill="#d8cfb4"/>
+          <text x="22" y="150" font-family="Times New Roman, serif" font-size="22" fill="#1a3aa0" text-decoration="underline">&#187; Home</text>
+          <text x="22" y="190" font-family="Times New Roman, serif" font-size="22" fill="#1a3aa0" text-decoration="underline">&#187; Services</text>
+          <text x="22" y="230" font-family="Times New Roman, serif" font-size="22" fill="#1a3aa0" text-decoration="underline">&#187; Gallery!!</text>
+          <text x="22" y="270" font-family="Times New Roman, serif" font-size="22" fill="#1a3aa0" text-decoration="underline">&#187; Contact Us</text>
+          <rect x="22" y="320" width="206" height="120" fill="#fff8c2" stroke="#caa83a" stroke-width="2"/>
+          <text x="40" y="360" font-family="Arial" font-size="16" fill="#8a6d1a" font-weight="bold">UNDER</text>
+          <text x="40" y="384" font-family="Arial" font-size="16" fill="#8a6d1a" font-weight="bold">CONSTRUCTION</text>
+          <text x="55" y="420" font-family="Courier" font-size="13" fill="#555">visitors: 000847</text>
+          <text x="300" y="160" font-family="Times New Roman, serif" font-size="42" fill="#5a1414" font-weight="bold">Welcome To Our Website!!!</text>
+          <rect x="300" y="200" width="840" height="14" fill="#b9ad8c"/>
+          <rect x="300" y="226" width="840" height="14" fill="#b9ad8c"/>
+          <rect x="300" y="252" width="700" height="14" fill="#b9ad8c"/>
+          <rect x="300" y="300" width="380" height="240" fill="#c4b790" stroke="#8a7f5e" stroke-width="3"/>
+          <text x="430" y="430" font-family="Times New Roman, serif" font-size="20" fill="#6b6147">[ photo.jpg ]</text>
+          <rect x="710" y="300" width="430" height="240" fill="#fff" stroke="#999" stroke-width="2"/>
+          <text x="735" y="345" font-family="Courier" font-size="16" fill="#444">CALL NOW: 555-0192</text>
+          <text x="735" y="380" font-family="Courier" font-size="14" fill="#777">Open Mon-Fri 9-5</text>
+          <text x="300" y="610" font-family="Times New Roman, serif" font-size="14" fill="#7a735a">Best viewed in Internet Explorer 6 at 1024x768</text>
+        </svg>
+      </div>
+
+      <!-- AFTER: replace this whole .layer's contents with <img src="your-after.png" alt="After"> -->
+      <div class="layer after">
+        <svg viewBox="0 0 1200 750" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Modern website after redesign">
+          <rect width="1200" height="750" fill="#ffffff"/>
+          <rect width="1200" height="750" fill="#f7f9fc"/>
+          <circle cx="48" cy="50" r="11" fill="#ff8a4c"/>
+          <text x="70" y="58" font-family="Inter, Arial, sans-serif" font-size="24" fill="#0c1120" font-weight="700">Northgate</text>
+          <text x="820" y="56" font-family="Inter, Arial, sans-serif" font-size="16" fill="#5b6577">Services</text>
+          <text x="930" y="56" font-family="Inter, Arial, sans-serif" font-size="16" fill="#5b6577">Reviews</text>
+          <rect x="1020" y="32" width="140" height="40" rx="20" fill="#0c1120"/>
+          <text x="1052" y="58" font-family="Inter, Arial, sans-serif" font-size="15" fill="#fff" font-weight="600">Book now</text>
+          <text x="80" y="280" font-family="Inter, Arial, sans-serif" font-size="62" fill="#0c1120" font-weight="700">Heating fixed right,</text>
+          <text x="80" y="350" font-family="Inter, Arial, sans-serif" font-size="62" fill="#ff8a4c" font-weight="700">the first time.</text>
+          <text x="82" y="410" font-family="Inter, Arial, sans-serif" font-size="22" fill="#5b6577">Trusted local engineers. Same-day callouts across the city.</text>
+          <rect x="80" y="450" width="200" height="56" rx="12" fill="#ff8a4c"/>
+          <text x="118" y="486" font-family="Inter, Arial, sans-serif" font-size="18" fill="#1a0e06" font-weight="600">Book a visit</text>
+          <rect x="300" y="450" width="180" height="56" rx="12" fill="#fff" stroke="#d6dce8" stroke-width="2"/>
+          <text x="338" y="486" font-family="Inter, Arial, sans-serif" font-size="18" fill="#0c1120" font-weight="600">Call us</text>
+          <rect x="80" y="560" width="330" height="150" rx="16" fill="#fff" stroke="#e7ecf4" stroke-width="2"/>
+          <rect x="435" y="560" width="330" height="150" rx="16" fill="#fff" stroke="#e7ecf4" stroke-width="2"/>
+          <rect x="790" y="560" width="330" height="150" rx="16" fill="#fff" stroke="#e7ecf4" stroke-width="2"/>
+          <circle cx="118" cy="600" r="14" fill="#ffe3d2"/><text x="112" y="606" font-family="Inter" font-size="16" fill="#ff8a4c">&#9889;</text>
+          <text x="100" y="652" font-family="Inter, Arial, sans-serif" font-size="19" fill="#0c1120" font-weight="600">Fast response</text>
+          <text x="100" y="682" font-family="Inter, Arial, sans-serif" font-size="14" fill="#8a93a6">Within 60 minutes</text>
+          <text x="455" y="652" font-family="Inter, Arial, sans-serif" font-size="19" fill="#0c1120" font-weight="600">Fixed pricing</text>
+          <text x="455" y="682" font-family="Inter, Arial, sans-serif" font-size="14" fill="#8a93a6">No surprise bills</text>
+          <text x="810" y="652" font-family="Inter, Arial, sans-serif" font-size="19" fill="#0c1120" font-weight="600">5-star rated</text>
+          <text x="810" y="682" font-family="Inter, Arial, sans-serif" font-size="14" fill="#8a93a6">600+ reviews</text>
+        </svg>
+      </div>
+
+      <span class="tag-label tag-before">Before</span>
+      <span class="tag-label tag-after">After</span>
+      <div class="divider"><button class="handle" aria-label="Drag to compare before and after" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0"></button></div>
+    </div>
+
+    <p class="result"><strong>Result:</strong> bounce rate down, mobile bookings up — the old site had no call-to-action above the fold and didn't load on phones.</p>
+  </article>
+
+  <!-- ══════════════ PROJECT 2 (copy this block to add more) ══════════════ -->
+  <article class="project">
+    <div class="project-head">
+      <div>
+        <h2>Project name</h2>
+        <div class="url">clientsite.example</div>
+      </div>
+      <div class="tags"><span>Edit these tags</span><span>What you changed</span></div>
+    </div>
+
+    <div class="compare" style="--pos:50%">
+      <div class="layer before">
+        <svg viewBox="0 0 1200 750" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Before placeholder">
+          <rect width="1200" height="750" fill="#1b2236"/>
+          <text x="600" y="370" font-family="Inter, Arial, sans-serif" font-size="34" fill="#6b7897" text-anchor="middle" font-weight="600">Drop your BEFORE screenshot here</text>
+          <text x="600" y="412" font-family="Inter, Arial, sans-serif" font-size="17" fill="#4d5872" text-anchor="middle">replace this &lt;svg&gt; with &lt;img src="before.png"&gt;</text>
+        </svg>
+      </div>
+      <div class="layer after">
+        <svg viewBox="0 0 1200 750" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="After placeholder">
+          <rect width="1200" height="750" fill="#0c1120"/>
+          <text x="600" y="370" font-family="Inter, Arial, sans-serif" font-size="34" fill="#ff8a4c" text-anchor="middle" font-weight="600">Drop your AFTER screenshot here</text>
+          <text x="600" y="412" font-family="Inter, Arial, sans-serif" font-size="17" fill="#93a0bd" text-anchor="middle">replace this &lt;svg&gt; with &lt;img src="after.png"&gt;</text>
+        </svg>
+      </div>
+      <span class="tag-label tag-before">Before</span>
+      <span class="tag-label tag-after">After</span>
+      <div class="divider"><button class="handle" aria-label="Drag to compare before and after" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0"></button></div>
+    </div>
+
+    <p class="result"><strong>Result:</strong> write the one-line outcome that matters to this client here.</p>
+  </article>
+
+  <footer>
+    <span>Built by Your Studio</span>
+    <span>Want this for your site? <a href="#">Get in touch &#8594;</a></span>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+    document.querySelectorAll('.compare').forEach(function(box){
+      var handle = box.querySelector('.handle');
+      var dragging = false;
+
+      function setPos(pct){
+        pct = clamp(pct, 0, 100);
+        box.style.setProperty('--pos', pct + '%');
+        handle.setAttribute('aria-valuenow', Math.round(pct));
+      }
+      function fromEvent(e){
+        var r = box.getBoundingClientRect();
+        var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+        setPos(x / r.width * 100);
+      }
+
+      box.addEventListener('pointerdown', function(e){
+        dragging = true;
+        box.classList.remove('nudge');
+        box.setPointerCapture && box.setPointerCapture(e.pointerId);
+        fromEvent(e);
+      });
+      box.addEventListener('pointermove', function(e){ if(dragging) fromEvent(e); });
+      window.addEventListener('pointerup', function(){ dragging = false; });
+
+      handle.addEventListener('keydown', function(e){
+        var now = parseFloat(box.style.getPropertyValue('--pos')) || 50;
+        var step = e.shiftKey ? 10 : 2;
+        if(e.key === 'ArrowLeft'){ setPos(now - step); e.preventDefault(); }
+        if(e.key === 'ArrowRight'){ setPos(now + step); e.preventDefault(); }
+        if(e.key === 'Home'){ setPos(0); e.preventDefault(); }
+        if(e.key === 'End'){ setPos(100); e.preventDefault(); }
+      });
+      handle.addEventListener('click', function(e){ e.stopPropagation(); });
+    });
+  })();
+</script>
+</body>
+</html>

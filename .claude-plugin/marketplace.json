@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "site-audit-kit",
+  "owner": {
+    "name": "bithomie"
+  },
+  "metadata": {
+    "description": "Screenshot prospect websites, write cold-outreach audits, and build before/after showcases & videos.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "site-audit-kit",
+      "source": ".",
+      "description": "Give Claude eyes: screenshot any site at desktop + mobile, write a sales-ready audit, and render before/after reveal videos for portfolios and Reels.",
+      "category": "productivity"
+    }
+  ]
+}
