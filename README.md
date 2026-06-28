@@ -6,30 +6,61 @@ helps you build before/after proof once you win the job. No manual screenshots.
 
 ---
 
-## For users — install in 2 lines
+## How to install & use
 
-In Claude Code:
+You don't clone this repo or run anything in a terminal. Everything happens
+**inside Claude Code** — the GitHub repo is just where Claude Code downloads
+the plugin from.
+
+### Before you start, you need
+
+- **Claude Code** installed ([install guide](https://docs.claude.com/en/docs/claude-code/overview)) and signed in with a **paid Anthropic plan**
+- **Node.js** installed ([nodejs.org](https://nodejs.org))
+
+### Step 1 — install the plugin (one time)
+
+Open Claude Code and type these two commands, one at a time:
 
 ```
 /plugin marketplace add bithomie0/site-audit-kit
 /plugin install site-audit-kit@site-audit-kit
 ```
 
-(This repo is hosted at `github.com/bithomie0/site-audit-kit`.)
+> These start with a slash and are **typed directly into Claude Code** — they
+> are Claude Code's own commands, not something you ask in plain English, and
+> not something you run in a normal terminal. The first command points Claude
+> Code at this repo; the second installs the plugin from it.
 
-Then just use the commands:
+The first time you run an audit, Claude asks permission to install Playwright +
+Chromium; the first video asks to install the Remotion deps. Approve once and
+Claude handles the rest. (`@remotion/renderer` bundles its own ffmpeg, so
+there's nothing else to install.)
+
+### Step 2 — use it
+
+Just type any of these in Claude Code:
 
 ```
+# Screenshot one or more sites and write a sales-ready audit for each
 /site-audit-kit:audit joesplumbing.com riversidedental.com
+
+# Render a before/after reveal video (landscape + vertical) from two images
 /site-audit-kit:video shots/joesplumbing_com/desktop.png public/new-build.png "My Studio"
+
+# Build a drag-to-compare HTML showcase from two images
 /site-audit-kit:before-after shots/joesplumbing_com/desktop.png public/new-build.png
 ```
 
-**Requirements:** Claude Code, Node.js, and a paid Anthropic subscription.
-The first audit asks permission to install Playwright + Chromium; the first
-video asks to install the Remotion deps. Approve once and Claude handles the
-rest. `@remotion/renderer` bundles its own ffmpeg, so there's no separate
-video tooling to install.
+Claude does the work behind each command — screenshotting, writing the audit,
+rendering the video. You just trigger it with the slash command.
+
+### Updating later
+
+If a new version ships, refresh it in Claude Code with:
+
+```
+/plugin marketplace update site-audit-kit
+```
 
 ---
 
